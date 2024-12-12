@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Book Page Turn</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Cover</title>
 <style>
     body {
         margin: 0;
@@ -16,186 +16,35 @@
         height: 100vh;
     }
 
-    .book-container {
+    .cover-container {
         position: relative;
-        width: 800px;
-        height: 500px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        background: #fdfdfd;
-        overflow: hidden;
-    }
-
-    .book-inner {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .page {
-        position: absolute;
-        top: 0;
-        width: 50%;
-        height: 100%;
-        box-sizing: border-box;
-        padding: 40px;
+        width: 400px;
+        height: 600px;
         background: #fff;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        font-size: 1.5em;
-        line-height: 1.4em;
-        color: #333;
-    }
-
-    .page-left {
-        left: 0;
-        border-right: 2px solid #ccc;
-        z-index: 2;
-    }
-
-    .page-right {
-        right: 0;
-        transform-origin: left center;
-        border-left: 2px solid #ccc;
-        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-        z-index: 1;
-        visibility: hidden; /* Start hidden for the closed book effect */
-    }
-
-    .page-flip {
-        transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
-    }
-
-    .turning-forward {
-        transform: rotateY(-180deg);
-    }
-
-    .turning-backward {
-        transform: rotateY(0deg);
-    }
-
-    .controls {
-        position: absolute;
-        bottom: 20px;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 20px;
-        box-sizing: border-box;
-    }
-
-    .button {
-        background: #333;
-        color: #fff;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
+        border: 2px solid #333;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         display: flex;
         align-items: center;
         justify-content: center;
+        text-align: center;
         cursor: pointer;
-        user-select: none;
         font-size: 2em;
     }
 
-    .button:hover {
-        background: #555;
-    }
-
-    .button:active {
-        background: #111;
+    .cover-container:hover {
+        background: #fdfdfd;
     }
 </style>
 </head>
 <body>
-<div class="book-container">
-    <div class="book-inner">
-        <div class="page page-left" id="left-page">Cover Page</div>
-        <div class="page page-right page-flip" id="right-page">Introduction</div>
-    </div>
-    <div class="controls">
-        <div class="button" id="prev-btn">«</div>
-        <div class="button" id="next-btn">»</div>
-    </div>
+<div class="cover-container" onclick="openBook()">
+    Cover Page
 </div>
-
 <script>
-    const pageSpreads = [
-        { left: "Cover Page", right: "" },
-        { left: "Cover Page", right: "Introduction" },
-        { left: "Chapter 1", right: "Page 2 Content" },
-        { left: "Chapter 2", right: "Page 4 Content" },
-        { left: "Chapter 3", right: "Page 6 Content" },
-        { left: "Chapter 4", right: "The End" }
-    ];
-
-    let currentIndex = 0;
-    const leftPageEl = document.getElementById("left-page");
-    const rightPageEl = document.getElementById("right-page");
-    const nextBtn = document.getElementById("next-btn");
-    const prevBtn = document.getElementById("prev-btn");
-
-    function updatePages() {
-        const spread = pageSpreads[currentIndex];
-        leftPageEl.textContent = spread.left;
-        rightPageEl.textContent = spread.right;
-
-        // Handle visibility for closed book effect
-        if (currentIndex === 0) {
-            rightPageEl.style.visibility = "hidden"; // Hide right page for closed book
-        } else {
-            rightPageEl.style.visibility = "visible"; // Show right page
-        }
-
-        prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
-        nextBtn.style.visibility = currentIndex === pageSpreads.length - 1 ? "hidden" : "visible";
+    function openBook() {
+        // Redirect to the inside pages
+        window.location.href = "inside-pages.html"; // Update with your actual file name/path
     }
-
-    updatePages();
-
-    let isTurning = false;
-
-    nextBtn.addEventListener("click", () => {
-        if (!isTurning && currentIndex < pageSpreads.length - 1) {
-            isTurning = true;
-
-            if (currentIndex === 0) {
-                // First turn: open the book
-                rightPageEl.style.visibility = "visible"; // Show right page
-            }
-
-            rightPageEl.classList.add("turning-forward");
-            rightPageEl.addEventListener("transitionend", () => {
-                currentIndex++;
-                rightPageEl.classList.remove("turning-forward");
-                rightPageEl.style.transition = "none";
-                rightPageEl.style.transform = "rotateY(0deg)";
-                updatePages();
-                setTimeout(() => rightPageEl.style.transition = "", 0);
-                isTurning = false;
-            }, { once: true });
-        }
-    });
-
-    prevBtn.addEventListener("click", () => {
-        if (!isTurning && currentIndex > 0) {
-            isTurning = true;
-
-            rightPageEl.classList.add("turning-backward");
-            rightPageEl.addEventListener("transitionend", () => {
-                currentIndex--;
-
-                if (currentIndex === 0) {
-                    rightPageEl.style.visibility = "hidden"; // Hide right page for closed book
-                }
-
-                rightPageEl.classList.remove("turning-backward");
-                updatePages();
-                isTurning = false;
-            }, { once: true });
-        }
-    });
 </script>
 </body>
 </html>
