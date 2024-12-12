@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: url('images/jungle-background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+}
+
+.game-container {
+    text-align: center;
+    width: 90%;
+    max-width: 800px;  /* Increased the max width of the game container */
+    background: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border-radius: 20px;  /* More rounded corners */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+}
+
+.orb {
+    width: 300px;  /* Larger orb */
+    height: 300px;  /* Larger orb */
+    margin: 30px auto;
+    background: radial-gradient(circle, #4b5320, #000);
+    border: 4px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 2em;  /* Larger text inside the orb */
+    color: #ffd700;
+    box-shadow: 0 0 35px #fff;  /* Increased glow */
+}
+
+.dice-button {
+    margin-top: 30px;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    background: #ffd700;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dice-button:hover {
+    background: #ffa500;
+}
+
+.dice-button:active {
+    background: #ff7f00;
+}
+
+.riddle {
+    margin-top: 20px;
+    font-style: italic;
+    font-size: 1.3em;
+    color: #fff;
+}
