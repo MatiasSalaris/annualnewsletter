@@ -1,20 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jumanji Game</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUMANJI</title>
+    <style>
+        /* General body styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('images/wooden.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+
+        /* Title style */
+        h1 {
+            color: #ffd700;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+        /* Orb container styles */
+        .orb-container {
+            width: 400px;
+            height: 400px;
+            margin: 50px auto;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            position: relative;
+            animation: orbGlow 2s infinite alternate;
+        }
+
+        /* Glow animation */
+        @keyframes orbGlow {
+            0% {
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.8), 0 10px 20px rgba(0, 0, 0, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 10px 25px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        /* Orb image */
+        .orb-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Message inside the orb */
+        .message {
+            font-size: 1.5em;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px #000000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Roll dice button */
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: #333;
+            background-color: yellow;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #ffcc00;
+        }
+
+        /* Full-page popup */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .popup button {
+            background-color: red;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="orb" id="orb">
-            Awaiting your roll...
-        </div>
-        <button class="dice-button" id="diceButton">Roll the Dice</button>
-        <div class="riddle" id="riddle"></div>
+    <h1>JUMANJI</h1>
+    <div class="orb-container">
+        <img src="images/orb.png" alt="Orb">
+        <div class="message" id="orbMessage">Awaiting your roll...</div>
+    </div>
+    <button onclick="rollDice()">Roll the Dice</button>
+
+    <!-- Popup -->
+    <div class="popup" id="popup" style="display: none;">
+        <h2 id="popupMessage"></h2>
+        <button onclick="closePopup()">Close</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Roll dice logic
+        function rollDice() {
+            const diceResult = Math.floor(Math.random() * 6) + 1;
+            let message = "";
+
+            // Determine message based on dice result
+            switch (diceResult) {
+                case 1:
+                    message = "Bad luck! Try again!";
+                    break;
+                case 2:
+                    message = "Not bad, but could be better!";
+                    break;
+                case 3:
+                    message = "A good roll, but not the best!";
+                    break;
+                case 4:
+                    message = "Decent roll, you're getting closer!";
+                    break;
+                case 5:
+                    message = "Great roll! You're almost there!";
+                    break;
+                case 6:
+                    message = "Amazing! You hit the jackpot!";
+                    break;
+            }
+
+            // Update the orb message
+            document.getElementById("orbMessage").innerText = message;
+
+            // Show the popup with the dice result
+            const popup = document.getElementById("popup");
+            const popupMessage = document.getElementById("popupMessage");
+            popupMessage.innerText = `You rolled a ${diceResult}! ${message}`;
+            popup.style.display = "flex";
+        }
+
+        // Close popup
+        function closePopup() {
+            const popup = document.getElementById("popup");
+            popup.style.display = "none";
+        }
+    </script>
 </body>
 </html>
