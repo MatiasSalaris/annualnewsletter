@@ -22,11 +22,12 @@ body {
 }
 
 .orb {
-    width: 300px;  /* Larger orb */
-    height: 300px;  /* Larger orb */
-    margin: 0px auto;
-    background: url('images/orb.png') no-repeat center center;  /* Make sure to replace 'orb-image.png' with your actual image file name */
-    background-size: cover;  /* Ensure the image fits the size of the orb */
+    width: 300px;
+    height: 300px;
+    margin: 30px auto;
+    background: url('images/orb-image.png') no-repeat center center;
+    background-size: contain;  /* Ensures the whole image fits inside the orb */
+    background-position: center center;
     border: 4px solid #fff;
     border-radius: 50%;
     display: flex;
@@ -34,9 +35,9 @@ body {
     justify-content: center;
     text-align: center;
     font-size: 2em;
-    color: #ffd700;  /* Text color */
-    box-shadow: 0 0 35px #fff;  /* Glowing effect around the orb */
-    transform: rotateX(15deg) rotateY(-10deg);  /* 3D rotation effect */
+    color: #ffd700;
+    box-shadow: 0 0 35px #fff;
+    transform: rotateX(15deg) rotateY(-10deg);
     animation: orbGlow 1.5s infinite alternate;
 }
 
