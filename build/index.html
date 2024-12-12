@@ -1,50 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Book Cover</title>
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: #eee;
-        font-family: sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jumanji Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('jungle-background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
 
-    .cover-container {
-        position: relative;
-        width: 400px;
-        height: 600px;
-        background: #fff;
-        border: 2px solid #333;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        cursor: pointer;
-        font-size: 2em;
-    }
+        .game-container {
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
 
-    .cover-container:hover {
-        background: #fdfdfd;
-    }
-</style>
+        .orb {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background: radial-gradient(circle, #4b5320, #000);
+            border: 3px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.5em;
+            color: #ffd700;
+            box-shadow: 0 0 25px #fff;
+        }
+
+        .dice-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dice-button:hover {
+            background: #ffa500;
+        }
+
+        .riddle {
+            margin-top: 10px;
+            font-style: italic;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-<div class="cover-container" onclick="openBook()">
-    Cover Page
-</div>
-<script>
-    function openBook() {
-        // Redirect to the inside pages
-        window.location.href = "inside-pages.html"; // Update with your actual file name/path
-    }
-</script>
+    <div class="game-container">
+        <div class="orb" id="orb">
+            Awaiting your roll...
+        </div>
+        <button class="dice-button" id="diceButton">Roll the Dice</button>
+        <div class="riddle" id="riddle"></div>
+    </div>
+
+    <script>
+        // Example riddles and responses
+        const riddles = [
+            "I speak without a mouth and hear without ears. What am I?",
+            "The more you take, the more you leave behind. What am I?",
+            "I’m light as a feather, yet the strongest man can’t hold me for long. What am I?"
+        ];
+
+        const answers = [
+            "An echo",
+            "Footsteps",
+            "Breath"
+        ];
+
+        const orb = document.getElementById('orb');
+        const riddleDiv = document.getElementById('riddle');
+        const diceButton = document.getElementById('diceButton');
+
+        function rollDice() {
+            const randomIndex = Math.floor(Math.random() * riddles.length);
+            orb.textContent = riddles[randomIndex]; // Show riddle in the orb
+            riddleDiv.textContent = ''; // Clear the answer
+
+            setTimeout(() => {
+                // Reveal answer after 5 seconds
+                riddleDiv.textContent = `Answer: ${answers[randomIndex]}`;
+            }, 5000);
+        }
+
+        diceButton.addEventListener('click', rollDice);
+    </script>
 </body>
 </html>
