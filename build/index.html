@@ -51,6 +51,7 @@
     .page-left {
         left: 0;
         border-right: 2px solid #ccc;
+        z-index: 2;
     }
 
     .page-right {
@@ -58,6 +59,8 @@
         transform-origin: left center;
         border-left: 2px solid #ccc;
         box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        z-index: 1;
+        visibility: hidden; /* Start hidden for the closed book effect */
     }
 
     .page-flip {
@@ -119,6 +122,7 @@
 
 <script>
     const pageSpreads = [
+        { left: "Cover Page", right: "" },
         { left: "Cover Page", right: "Introduction" },
         { left: "Chapter 1", right: "Page 2 Content" },
         { left: "Chapter 2", right: "Page 4 Content" },
@@ -136,6 +140,14 @@
         const spread = pageSpreads[currentIndex];
         leftPageEl.textContent = spread.left;
         rightPageEl.textContent = spread.right;
+
+        // Handle visibility for closed book effect
+        if (currentIndex === 0) {
+            rightPageEl.style.visibility = "hidden"; // Hide right page for closed book
+        } else {
+            rightPageEl.style.visibility = "visible"; // Show right page
+        }
+
         prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
         nextBtn.style.visibility = currentIndex === pageSpreads.length - 1 ? "hidden" : "visible";
     }
@@ -147,6 +159,12 @@
     nextBtn.addEventListener("click", () => {
         if (!isTurning && currentIndex < pageSpreads.length - 1) {
             isTurning = true;
+
+            if (currentIndex === 0) {
+                // First turn: open the book
+                rightPageEl.style.visibility = "visible"; // Show right page
+            }
+
             rightPageEl.classList.add("turning-forward");
             rightPageEl.addEventListener("transitionend", () => {
                 currentIndex++;
@@ -163,18 +181,19 @@
     prevBtn.addEventListener("click", () => {
         if (!isTurning && currentIndex > 0) {
             isTurning = true;
-            rightPageEl.style.transition = "none";
-            rightPageEl.style.transform = "rotateY(-180deg)";
-            currentIndex--;
-            updatePages();
-            setTimeout(() => {
-                rightPageEl.style.transition = "";
-                rightPageEl.classList.add("turning-backward");
-                rightPageEl.addEventListener("transitionend", () => {
-                    rightPageEl.classList.remove("turning-backward");
-                    isTurning = false;
-                }, { once: true });
-            }, 0);
+
+            rightPageEl.classList.add("turning-backward");
+            rightPageEl.addEventListener("transitionend", () => {
+                currentIndex--;
+
+                if (currentIndex === 0) {
+                    rightPageEl.style.visibility = "hidden"; // Hide right page for closed book
+                }
+
+                rightPageEl.classList.remove("turning-backward");
+                updatePages();
+                isTurning = false;
+            }, { once: true });
         }
     });
 </script>
