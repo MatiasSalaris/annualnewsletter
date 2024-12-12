@@ -25,7 +25,6 @@
         overflow: hidden;
     }
 
-    /* This is the spine area (center) */
     .book-inner {
         width: 100%;
         height: 100%;
@@ -33,7 +32,6 @@
         overflow: hidden;
     }
 
-    /* A single page */
     .page {
         position: absolute;
         top: 0;
@@ -58,22 +56,18 @@
     .page-right {
         right: 0;
         transform-origin: left center;
-        background: #fff;
         border-left: 2px solid #ccc;
         box-shadow: -5px 0 15px rgba(0,0,0,0.1);
     }
 
-    /* This will be the flipping page that sits on top during a turn */
     .page-flip {
-        transition: transform 1s cubic-bezier(0.77,0,0.175,1);
+        transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
     }
 
-    /* When flipping forward */
     .turning-forward {
         transform: rotateY(-180deg);
     }
 
-    /* When flipping backward */
     .turning-backward {
         transform: rotateY(0deg);
     }
@@ -114,9 +108,7 @@
 <body>
 <div class="book-container">
     <div class="book-inner">
-        <!-- Left visible page -->
         <div class="page page-left" id="left-page">Cover Page</div>
-        <!-- Right visible page (this will be the flipping one) -->
         <div class="page page-right page-flip" id="right-page">Introduction</div>
     </div>
     <div class="controls">
@@ -126,8 +118,6 @@
 </div>
 
 <script>
-    // Array of page spreads: each spread is {left, right}
-    // The first spread's left is considered the cover, and right is the first content page.
     const pageSpreads = [
         { left: "Cover Page", right: "Introduction" },
         { left: "Chapter 1", right: "Page 2 Content" },
@@ -136,7 +126,7 @@
         { left: "Chapter 4", right: "The End" }
     ];
 
-    let currentIndex = 0; // Index of the current spread
+    let currentIndex = 0;
     const leftPageEl = document.getElementById("left-page");
     const rightPageEl = document.getElementById("right-page");
     const nextBtn = document.getElementById("next-btn");
@@ -146,86 +136,47 @@
         const spread = pageSpreads[currentIndex];
         leftPageEl.textContent = spread.left;
         rightPageEl.textContent = spread.right;
+        prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
+        nextBtn.style.visibility = currentIndex === pageSpreads.length - 1 ? "hidden" : "visible";
     }
 
-    // Initially set up
     updatePages();
-    prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
-    nextBtn.style.visibility = currentIndex === pageSpreads.length - 1 ? "hidden" : "visible";
 
-    let isTurning = false; // To prevent double clicks during animation
+    let isTurning = false;
 
     nextBtn.addEventListener("click", () => {
-        if (currentIndex < pageSpreads.length - 1 && !isTurning) {
+        if (!isTurning && currentIndex < pageSpreads.length - 1) {
             isTurning = true;
-            // Animate turning forward
-            rightPageEl.classList.remove("turning-backward");
             rightPageEl.classList.add("turning-forward");
-
-            rightPageEl.addEventListener("transitionend", forwardTurnEnd, { once: true });
+            rightPageEl.addEventListener("transitionend", () => {
+                currentIndex++;
+                rightPageEl.classList.remove("turning-forward");
+                rightPageEl.style.transition = "none";
+                rightPageEl.style.transform = "rotateY(0deg)";
+                updatePages();
+                setTimeout(() => rightPageEl.style.transition = "", 0);
+                isTurning = false;
+            }, { once: true });
         }
     });
-
-    function forwardTurnEnd() {
-        // Move to next spread
-        currentIndex++;
-        // After turning forward: 
-        // The "right" page that turned is now on the left side.
-        // We swap the content so left page shows the new spread's left content,
-        // and right page becomes the next spread's right content, but reset the transform.
-        
-        rightPageEl.classList.remove("turning-forward");
-        // Temporarily hide transition to reset position
-        rightPageEl.style.transition = "none";
-        rightPageEl.style.transform = "rotateY(0deg)"; 
-        // Update content
-        updatePages();
-        // Force reflow to apply changes before re-adding transition
-        rightPageEl.offsetHeight;
-        rightPageEl.style.transition = ""; // re-enable transition
-
-        // Update buttons
-        prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
-        nextBtn.style.visibility = currentIndex === pageSpreads.length - 1 ? "hidden" : "visible";
-
-        isTurning = false;
-    }
 
     prevBtn.addEventListener("click", () => {
-        if (currentIndex > 0 && !isTurning) {
+        if (!isTurning && currentIndex > 0) {
             isTurning = true;
-            // Animate turning backward (like pulling a page back)
-            // To simulate this, we actually flip rightPage in reverse.
-            // Before flipping, we need the right page to show the previous spread's right page content.
-            
-            // Temporarily disable transition to change content
             rightPageEl.style.transition = "none";
-            // Set it to "folded" state (180deg) so turning back to 0deg looks like going backward
             rightPageEl.style.transform = "rotateY(-180deg)";
-            // Update content to previous spread
             currentIndex--;
             updatePages();
-            rightPageEl.offsetHeight; // reflow
-            rightPageEl.style.transition = ""; // re-enable transition
-            
-            // Now we move from -180deg to 0deg to simulate turning back
-            rightPageEl.classList.remove("turning-forward");
-            rightPageEl.classList.add("turning-backward");
-
-            rightPageEl.addEventListener("transitionend", backwardTurnEnd, { once: true });
+            setTimeout(() => {
+                rightPageEl.style.transition = "";
+                rightPageEl.classList.add("turning-backward");
+                rightPageEl.addEventListener("transitionend", () => {
+                    rightPageEl.classList.remove("turning-backward");
+                    isTurning = false;
+                }, { once: true });
+            }, 0);
         }
     });
-
-    function backwardTurnEnd() {
-        // Finished turning backward, now page is flat again
-        rightPageEl.classList.remove("turning-backward");
-
-        // Update buttons
-        prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
-        nextBtn.style.visibility = currentIndex === pageSpreads.length - 1 ? "hidden" : "visible";
-
-        isTurning = false;
-    }
 </script>
 </body>
 </html>
