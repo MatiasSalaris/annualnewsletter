@@ -22,8 +22,8 @@ body {
 }
 
 .orb {
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
     margin: 30px auto;
     background: url('images/orb.png') no-repeat center center;
     background-size: contain;  /* Ensures the whole image fits inside the orb */
